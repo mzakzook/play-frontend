@@ -1,0 +1,34 @@
+.top-nav {
+  height: 10%;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  background-color: #fdfdfd !important;
+  overflow-x: hidden;
+  border-bottom: 1px solid rgba(185, 184, 184, 0.548);
+  z-index: 1; /* Stay on top */
+
+  }
+
+.side-nav {
+  top: 10%;
+  height: 100%; /* Full-height: remove this if you want "auto" height */
+  width: 17%; /* Set the width of the sidebar */
+  position: fixed; /* Fixed Sidebar (stay in place on scroll) */
+  left: 0;
+  background-color: #fdfdfd; /* Black */
+  overflow-x: hidden; /* Disable horizontal scroll */
+  border-right: 1px solid rgba(185, 184, 184, 0.548);
+  color: #202020;
+}
+
+main {
+  font-size: 18px;
+  overflow-x: hidden;
+  color: #202020;
+  margin-left: 17%;
+  margin-bottom: 90%;
+  margin-top: 10%;
+  padding: 10px;
+}
+
