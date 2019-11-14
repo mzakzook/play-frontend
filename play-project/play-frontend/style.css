@@ -18,6 +18,14 @@ top-nav {
 
   }
 
+.pre-sign-in {
+  width: 100%;
+}
+
+.post-sign-in {
+  width: 67%;
+}
+
 .top {
   top: 10%;
   height: 10%; /* Full-height: remove this if you want "auto" height */
@@ -30,7 +38,7 @@ top-nav {
 
 main {
   overflow-x: hidden;
-  margin: 0 auto;
+  margin: 0;
   margin-top: 10%;
   padding: 10px;
   text-align: center;
@@ -70,7 +78,11 @@ main button {
   white-space: nowrap;
   display: block;
 }
-
 .chat-hidden {
   visibility: hidden;
+}
+
+.chat {
+  margin-left: 67%;
+  width: 33%;
 }
