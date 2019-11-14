@@ -4,9 +4,12 @@
 
   let mainDiv = document.querySelector('[data-id="game-con"]')
   let chatWindow = document.querySelector('[data-id="chat-window"]')
+  let chatList = chatWindow.querySelector('ul')
   let current_player = {}
   let gamesReference
   let playersReference
+  let chatsReference
+  let pgsReference
 
   const pongButton = document.createElement('button')
   pongButton.className = "game-button" 
@@ -20,9 +23,9 @@
   shuffleboardButton.className = "game-button" 
   shuffleboardButton.textContent = "Shuffleboard" 
 
-  const liveChatButton = document.createElement('button')
-  liveChatButton.className = "other-button" 
-  liveChatButton.textContent = "Live Chat" 
+  // const liveChatButton = document.createElement('button')
+  // liveChatButton.className = "other-button" 
+  // liveChatButton.textContent = "Live Chat" 
 
   const leaderButton = document.createElement('button')
   leaderButton.className = "other-button" 
@@ -34,9 +37,13 @@
 
   fetchGames()
   fetchPlayers()
+  fetchPlayerGames()
+  
   listenForGameSelection()
   listenForJoin()
   listenForSignIn()
+  chatListener()
+  chatRefreshListener()
   
   function fetchGames() {
     fetch(`${BACKEND_URL}/games`)
@@ -56,19 +63,48 @@
   })
   }
   
+  function fetchChats() {
+    fetch(`${BACKEND_URL}/chats`)
+    .then(response => 
+      response.json())
+    .then(data => {
+      chatsReference = data
+      return chatsReference
+    })
+    .then(data => loadChats())
+  }
+
+  function fetchPlayerGames() {
+    fetch(`${BACKEND_URL}/player_games`)
+    .then(response => 
+      response.json())
+    .then(data => {
+      pgsReference = data
+    })
+  }
 
 
 
   function ifSignedIn() {
-    topDiv.append(pongButton, foosballButton, shuffleboardButton, liveChatButton, leaderButton) 
+    topDiv.append(pongButton, foosballButton, shuffleboardButton, leaderButton) 
     mainDiv.className = "post-sign-in"
     chatWindow.className = "chat"
+    document.querySelector('.pre-all-con').className = "all-con"
+    fetchChats()
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
     <h2>What do you want to Play?</h2>
     `
     
 
+  }
+
+  function loadChats() {
+    // chatsReference.data[0].attributes.message
+    // chatsReference.data[0].attributes.player.name
+    chatsReference.data.forEach(chat => {
+      chatList.innerHTML += `<li>${chat.attributes.player.name}: ${chat.attributes.message}`
+    })
   }
 
   function listenForSignIn() {
@@ -107,6 +143,7 @@
   function listenForGameSelection() {
     topDiv.addEventListener('click', event => {
       if (event.target.textContent === "Ping Pong" || event.target.textContent === "Shuffleboard" || event.target.textContent === "Foosball") {
+        fetchGames()
         let game_type = event.target.textContent
         let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
         mainDiv.innerHTML = `<h2> ${games[0].attributes.table.table_type}</h2> ${games.map(game => renderGame(game)).join('')}`
@@ -115,14 +152,24 @@
   }
 
   function renderGame(game) {
+    let buttonText;
+    let dataVal;
+    if (game.attributes.players.find(player => player.name === current_player.name)) {
+      const pgId = pgsReference.data.find(pg => pg.attributes.player.id === parseInt(current_player.id) && pg.attributes.game.id === parseInt(game.id))
+      buttonText = " Leave "
+      dataVal = pgId.id
+    } else {
+      buttonText = " Join "
+      dataVal = game.id
+    }
     return `<div class="game-div" data-id="game-div-${game.id}">
     <h4>${game.attributes.num_players / 2} v ${game.attributes.num_players / 2}</h4>
-    <button data-id="${game.id}"> Join </button>
-    <ul>${renderJoins(game.attributes.players)}</ul>
+    <button data-id="${dataVal}">${buttonText}</button>
+    <ul>${renderJoins(game.attributes.players, game.id)}</ul>
     </div>`
   }
 
-  function renderJoins(join_array) {
+  function renderJoins(join_array, game_id) {
     return join_array.map(player => {
       return `<li>${player.name}</li>`
     }).join('')
@@ -260,6 +307,37 @@
     })
   }
   
+  function chatListener() {
+    chatForm = chatWindow.querySelector('form')
+    chatForm.addEventListener('submit', function(event) {
+      event.preventDefault()
+      const message = event.target.message.value
+      fetch(`${BACKEND_URL}/chats`, {
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          message: message,
+          player_id: current_player.id
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        chatList.innerHTML += `<li>${current_player.name}: ${data.message}</li>`
+      })
+    })
+  }
+
+  function chatRefreshListener() {
+    chatWindow.addEventListener('click', event => {
+      if (event.target.tagName === "BUTTON") {
+        chatList.innerHTML = ""
+        fetchChats()
+      }
+    })
+  }
 
 
 

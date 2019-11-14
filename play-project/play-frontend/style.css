@@ -22,9 +22,7 @@ top-nav {
   width: 100%;
 }
 
-.post-sign-in {
-  width: 67%;
-}
+
 
 .top {
   top: 10%;
@@ -81,8 +79,23 @@ main button {
 .chat-hidden {
   visibility: hidden;
 }
+.all-con {
+  display: grid;
+  grid-template-columns: 67% 33%;
+}
+
+.post-sign-in {
+  /* width: 67%; */
+}
 
 .chat {
-  margin-left: 67%;
-  width: 33%;
+  /* margin-left: 67%;
+  width: 33%; */
+}
+
+.chat textarea {
+  width: 100%;
+  border-radius: 3px;
+  font-size: 14px;
+  border: solid .5px rgba(192, 192, 192, 0.575);
 }
