@@ -2,7 +2,8 @@
 
   const BACKEND_URL = 'http://localhost:3000';
 
-  let mainDiv = document.querySelector('main')
+  let mainDiv = document.querySelector('[data-id="game-con"]')
+  let chatWindow = document.querySelector('[data-id="chat-window"]')
   let current_player = {}
   let gamesReference
   let playersReference
@@ -60,10 +61,13 @@
 
   function ifSignedIn() {
     topDiv.append(pongButton, foosballButton, shuffleboardButton, liveChatButton, leaderButton) 
+    mainDiv.className = "post-sign-in"
+    chatWindow.className = "chat"
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
     <h2>What do you want to Play?</h2>
     `
+    
 
   }
 
