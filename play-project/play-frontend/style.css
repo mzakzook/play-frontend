@@ -70,3 +70,7 @@ main button {
   white-space: nowrap;
   display: block;
 }
+
+.chat-hidden {
+  visibility: hidden;
+}

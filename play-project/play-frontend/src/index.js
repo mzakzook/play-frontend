@@ -31,35 +31,40 @@
 
   const signInForm = document.querySelector('.user-form')
 
-
+  fetchGames()
+  fetchPlayers()
   listenForGameSelection()
   listenForJoin()
   listenForSignIn()
-
-  fetch(`${BACKEND_URL}/games`)
+  
+  function fetchGames() {
+    fetch(`${BACKEND_URL}/games`)
     .then(response => 
       response.json())
     .then(data => {
       gamesReference = data
     })
+  }
 
-  fetch(`${BACKEND_URL}/players`)
+  function fetchPlayers() {
+    fetch(`${BACKEND_URL}/players`)
   .then(response => 
     response.json())
   .then(data => {
     playersReference = data
   })
+  }
+  
 
 
 
   function ifSignedIn() {
-    topDiv.append(pongButton, foosballButton, shuffleboardButton, liveChatButton, leaderButton)
-    current_player
-    
+    topDiv.append(pongButton, foosballButton, shuffleboardButton, liveChatButton, leaderButton) 
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
     <h2>What do you want to Play?</h2>
     `
+
   }
 
   function listenForSignIn() {
@@ -122,6 +127,7 @@
   function listenForJoin() {
     mainDiv.addEventListener('click', event => {
       if (event.target.textContent === " Join ") {
+        
         let chosenGame = gamesReference.data.find(game => {
           return game.id === event.target.dataset.id
         })
@@ -138,11 +144,12 @@
           if (!existingName) {
             
             if (chosenGame.attributes.players.length === chosenGame.attributes.num_players - 1) {
-              createPlayerGame(chosenGame)
+          
+              createPlayerGame(chosenGame, true)
               // need to build - updateFullValue(chosenGame)
               renderNewGame(chosenGame)
             } else {
-              createPlayerGame(chosenGame)
+              createPlayerGame(chosenGame, false)
             }
             
           }
@@ -170,6 +177,8 @@
         if (playersListItems[i].textContent === current_player.name) {
           playersListItems[i].remove()
           leaveButton.textContent = " Join "
+          leaveButton.dataset.id = leaveButton.parentElement.dataset.id.split('-')[2]
+          fetchGames()
         }
       }
 
@@ -191,13 +200,15 @@
     })
     .then(res => res.json())
     .then(data => {
-      gamesReference.data.push(data)
+      fetchGames()
       const replacedGame = document.querySelector(`[data-id="game-div-${game.id}"]`)
       setTimeout(function(){
         updateFull(game.id)
         // replacedGame.dataset.id.split('-')[2]
         replacedGame.dataset.id = `game-div-${data.id}`
         replacedGame.querySelector('ul').innerHTML = ""
+        replacedGame.querySelector('button').textContent = " Join "
+        replacedGame.querySelector('button').dataset.id = data.id
       }, 3000)
       
     })
@@ -216,7 +227,7 @@
     })
   }
 
-  function createPlayerGame(chosenGame) {
+  function createPlayerGame(chosenGame, boolean) {
     fetch(`${BACKEND_URL}/player_games`, {
       method: 'POST',
       headers: {
@@ -233,13 +244,18 @@
       const gameChoice = document.querySelector(`[data-id="game-div-${pg.data.attributes.game.id}"]`)
       const ul = gameChoice.querySelector('ul')
       const gameButton = gameChoice.querySelector('button')
-      gameButton.textContent = " Leave "
+      if (boolean) {
+        gameButton.textContent = " Game in Session "
+        setTimeout(function(){alert("Ready to Play!")}, 1000)
+      } else {
+        gameButton.textContent = " Leave "
+      }
       gameButton.dataset.id = pg.data.id
       ul.innerHTML += renderJoins([pg.data.attributes.player])
-      let refGame = gamesReference.data.find(game => parseInt(game.id) === pg.data.attributes.game.id)
-      refGame.attributes.players.push(pg.data.attributes.player)
+      fetchGames()
     })
   }
+  
 
 
 
