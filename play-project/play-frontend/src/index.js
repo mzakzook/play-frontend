@@ -325,14 +325,17 @@
       })
       .then(res => res.json())
       .then(data => {
+  
         chatList.innerHTML += `<li>${current_player.name}: ${data.message}</li>`
+      
       })
+      event.target.message.value = ""
     })
   }
 
   function chatRefreshListener() {
     chatWindow.addEventListener('click', event => {
-      if (event.target.tagName === "BUTTON") {
+      if (event.target.tagName === "BUTTON" && event.target.textContent === "Refresh") {
         chatList.innerHTML = ""
         fetchChats()
       }
