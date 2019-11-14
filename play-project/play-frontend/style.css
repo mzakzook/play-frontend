@@ -1,4 +1,12 @@
-.top-nav {
+* {
+  font-family: 'Work Sans', sans-serif;
+}
+
+li {
+  list-style-type: none;
+}
+
+top-nav {
   height: 10%;
   width: 100%;
   position: fixed;
@@ -10,25 +18,55 @@
 
   }
 
-.side-nav {
+.top {
   top: 10%;
-  height: 100%; /* Full-height: remove this if you want "auto" height */
-  width: 17%; /* Set the width of the sidebar */
+  height: 10%; /* Full-height: remove this if you want "auto" height */
+  width: 100%; /* Set the width of the sidebar */
   position: fixed; /* Fixed Sidebar (stay in place on scroll) */
-  left: 0;
   background-color: #fdfdfd; /* Black */
   overflow-x: hidden; /* Disable horizontal scroll */
-  border-right: 1px solid rgba(185, 184, 184, 0.548);
-  color: #202020;
+
 }
 
 main {
-  font-size: 18px;
   overflow-x: hidden;
-  color: #202020;
-  margin-left: 17%;
-  margin-bottom: 90%;
+  margin: 0 auto;
   margin-top: 10%;
   padding: 10px;
+  text-align: center;
 }
 
+main form {
+  overflow-x: hidden;
+  color: #202020;
+  margin: 0 auto;
+  margin-top: 10%;
+  padding: 10px;
+  width: 50%;
+}
+
+main form input {
+  border-radius: 3px;
+  padding: 13px;
+  margin: 0 auto;
+  margin-top: 3%;;
+  font-size: 14px;
+  border: solid .5px rgba(192, 192, 192, 0.575);
+  width: 25%; /* adjust as needed (as long as it doesn't break the signup.signup) */
+  display: block;
+  box-sizing: border-box;
+}
+
+main button {
+  margin: 0 auto;
+  border-radius: 70px;
+  box-shadow: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 20px;
+  padding: 8px 18px;
+  text-align: center;
+  white-space: nowrap;
+  display: block;
+}
