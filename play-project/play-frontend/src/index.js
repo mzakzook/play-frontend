@@ -110,6 +110,7 @@
     mainDiv.className = "post-sign-in"
     chatWindow.className = "chat"
     document.querySelector('.pre-all-con').className = "all-con"
+    fetchChats()
     setInterval(function(){fetchChats()}, 1000)
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
@@ -203,8 +204,14 @@
   }
 
   function renderFullGame(game) {
+    let liClass
+    if (game.attributes.num_players == 2) {
+      liClass = "one-v-one"
+    } else {
+      liClass = "two-v-two"
+    }
     return `
-    <li>
+    <li class=${liClass}>
       <h3> ${new Date(game.attributes.updated_at).toLocaleString('en-US')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
       <ul> ${game.attributes.players.map(player => renderReservedPlayer(player)).join('')} </ul>
     </li>
