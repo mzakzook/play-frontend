@@ -27,13 +27,15 @@
   // liveChatButton.className = "other-button" 
   // liveChatButton.textContent = "Live Chat" 
 
-  const leaderButton = document.createElement('button')
-  leaderButton.className = "other-button" 
-  leaderButton.textContent = "Leaderboard" 
+  // const leaderButton = document.createElement('button')
+  // leaderButton.className = "other-button" 
+  // leaderButton.textContent = "Leaderboard" 
 
   const topDiv = document.querySelector('.top')
 
   const signInForm = document.querySelector('.user-form')
+
+
 
   fetchGames()
   fetchPlayers()
@@ -69,7 +71,6 @@
       response.json())
     .then(data => {
       chatsReference = data
-      return chatsReference
     })
     .then(data => loadChats())
   }
@@ -83,10 +84,25 @@
     })
   }
 
+  function fetchLeaders(gameType) {
+    fetch(`${BACKEND_URL}/player_games?table_type=${gameType}`)
+    .then(res => res.json())
+    .then(data => {
+      const leaderboard = document.querySelector(".leaderboard")
+      leaderboard.innerHTML = "<h2>Leaderboard</h2>"
+      const leaderUl = document.createElement('ul')
+      leaderboard.appendChild(leaderUl)
+      const leaderNamesAndGamesPlayed = data.map(playerObj => `${playerObj[0]} Game(s) - ${playersReference.data.find(player => parseInt(player.id) === playerObj[1]).attributes.name}`)
+      for (let i = 0; i < leaderNamesAndGamesPlayed.length ; i++) {
+        leaderUl.innerHTML += `<li>${i + 1}.  ${leaderNamesAndGamesPlayed[i]}`
+      }
+    })
+  }
+
 
 
   function ifSignedIn() {
-    topDiv.append(pongButton, foosballButton, shuffleboardButton, leaderButton) 
+    topDiv.append(pongButton, foosballButton, shuffleboardButton) 
     mainDiv.className = "post-sign-in"
     chatWindow.className = "chat"
     document.querySelector('.pre-all-con').className = "all-con"
@@ -146,9 +162,56 @@
         fetchGames()
         let game_type = event.target.textContent
         let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
-        mainDiv.innerHTML = `<h2> ${games[0].attributes.table.table_type}</h2> ${games.map(game => renderGame(game)).join('')}`
+        let first
+        let second
+        if (games[0].attributes.num_players === 2) {
+          first = games[0] 
+          second = games[1]
+        } else {
+          first = games[1]
+          second = games[0]
+        }
+        
+
+        
+
+
+
+        const reservedGame = document.createElement('div')
+        reservedGame.className = "reserved-games"
+        reservedGame.innerHTML = `<h2>Recent ${event.target.textContent} Games</h2>`
+        const matchedGames = gamesReference.data.filter(game => game.attributes.table.table_type === games[0].attributes.table.table_type && game.attributes.full === true) 
+        reservedGame.innerHTML += `<ul>${matchedGames.reverse().map(game => renderFullGame(game)).join("")}</ul>`
+        const gameOne = document.createElement('div')
+        gameOne.className = "game-one"
+        const gameTwo = document.createElement('div')
+        gameTwo.className = "game-two"
+        gameOne.innerHTML = renderGame(first)
+        gameTwo.innerHTML = renderGame(second)
+        mainDiv.innerHTML = `<h2>${games[0].attributes.table.table_type}</h2>`
+        const leaderboard = document.createElement('div')
+        leaderboard.className = "leaderboard"
+        const slug = event.target.textContent.split(' ').join('_').toLowerCase()
+        mainDiv.append(gameOne, gameTwo, reservedGame, leaderboard)
+        fetchLeaders(slug)
       }
     })
+  }
+
+  function renderFullGame(game) {
+    return `
+    <li>
+      <h3> ${new Date(game.attributes.updated_at).toLocaleTimeString('en-US')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
+      <ul> ${game.attributes.players.map(player => renderReservedPlayer(player)).join('')} </ul>
+    </li>
+    `
+
+  }
+
+  function renderReservedPlayer(player) {
+    return `
+      <li> ${player.name} </li>
+    `
   }
 
   function renderGame(game) {
@@ -345,3 +408,4 @@
 
 
 })();
+

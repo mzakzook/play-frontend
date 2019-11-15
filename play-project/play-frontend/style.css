@@ -79,6 +79,11 @@ main button {
 .chat-hidden {
   visibility: hidden;
 }
+
+.reserved-games {
+  margin-top: 5%;
+}
+
 .all-con {
   display: grid;
   grid-template-columns: 67% 33%;
