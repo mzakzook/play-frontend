@@ -45,7 +45,7 @@
   listenForJoin()
   listenForSignIn()
   chatListener()
-  chatRefreshListener()
+  // chatRefreshListener()
   
   function fetchGames() {
     fetch(`${BACKEND_URL}/games`)
@@ -124,7 +124,7 @@
     // chatsReference.data[0].attributes.message
     // chatsReference.data[0].attributes.player.name
     chatsReference.data.forEach(chat => {
-      chatList.innerHTML += `<li>${chat.attributes.player.name.bold()} [${new Date(chat.attributes.created_at).toLocaleString('en-US').bold()}]: ${chat.attributes.message}`
+      chatList.innerHTML += `<li>${chat.attributes.player.name.bold()} [${new Date(chat.attributes.created_at).toLocaleString('en-US').bold()}]: ${chat.attributes.message}</li>`
     })
   }
 
@@ -176,12 +176,6 @@
           first = games[1]
           second = games[0]
         }
-        
-
-        
-
-
-
         const reservedGame = document.createElement('div')
         reservedGame.className = "reserved-games"
         reservedGame.innerHTML = `<h2>Recent ${event.target.textContent} Games</h2>`
@@ -400,21 +394,21 @@
       .then(res => res.json())
       .then(data => {
   
-        chatList.innerHTML += `<li>${current_player.name}: ${data.message}</li>`
-      
+        chatList.innerHTML += `<li>${current_player.name.bold()} [${new Date().toLocaleString('en-US').bold()}]: ${data.message}</li>`
+        
       })
       event.target.message.value = ""
     })
   }
 
-  function chatRefreshListener() {
-    chatWindow.addEventListener('click', event => {
-      if (event.target.tagName === "BUTTON" && event.target.textContent === "Refresh") {
-        chatList.innerHTML = ""
-        fetchChats()
-      }
-    })
-  }
+  // function chatRefreshListener() {
+  //   chatWindow.addEventListener('click', event => {
+  //     if (event.target.tagName === "BUTTON" && event.target.textContent === "Refresh") {
+  //       chatList.innerHTML = ""
+  //       fetchChats()
+  //     }
+  //   })
+  // }
 
 
 
