@@ -84,6 +84,7 @@ main form input {
   /* width: 25%; adjust as needed (as long as it doesn't break the signup.signup) */
   display: block;
   box-sizing: border-box;
+  
 }
 
 .top button {
