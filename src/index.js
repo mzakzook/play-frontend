@@ -174,7 +174,7 @@
     topDiv.addEventListener('click', event => {
       if (event.target.textContent === "Ping Pong" || event.target.textContent === "Shuffleboard" || event.target.textContent === "Foosball") {
         fetchGames()
-        topNav.innerHTML = `<h1>Play on ${current_player.name}!</h1>`
+        topNav.innerHTML = `<img src='play-logo.png'>`
         let game_type = event.target.textContent
         let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
         let first
