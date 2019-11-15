@@ -72,6 +72,7 @@
     .then(data => {
       chatsReference = data
     })
+    .then(data => chatList.innerHTML = "")
     .then(data => loadChats())
   }
 
@@ -86,7 +87,10 @@
 
   function fetchLeaders(gameType) {
     fetch(`${BACKEND_URL}/player_games?table_type=${gameType}`)
-    .then(res => res.json())
+    .then(res => {
+      fetchPlayers()
+      return res.json()
+    })
     .then(data => {
       const leaderboard = document.querySelector(".leaderboard")
       leaderboard.innerHTML = "<h2>Leaderboard</h2>"
@@ -106,7 +110,7 @@
     mainDiv.className = "post-sign-in"
     chatWindow.className = "chat"
     document.querySelector('.pre-all-con').className = "all-con"
-    fetchChats()
+    setInterval(function(){fetchChats()}, 1000)
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
     <h2>What do you want to Play?</h2>
@@ -119,7 +123,7 @@
     // chatsReference.data[0].attributes.message
     // chatsReference.data[0].attributes.player.name
     chatsReference.data.forEach(chat => {
-      chatList.innerHTML += `<li>${chat.attributes.player.name}: ${chat.attributes.message}`
+      chatList.innerHTML += `<li>${chat.attributes.player.name.bold()} [${new Date(chat.attributes.created_at).toLocaleString('en-US').bold()}]: ${chat.attributes.message}`
     })
   }
 
@@ -201,7 +205,7 @@
   function renderFullGame(game) {
     return `
     <li>
-      <h3> ${new Date(game.attributes.updated_at).toLocaleTimeString('en-US')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
+      <h3> ${new Date(game.attributes.updated_at).toLocaleString('en-US')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
       <ul> ${game.attributes.players.map(player => renderReservedPlayer(player)).join('')} </ul>
     </li>
     `
