@@ -5,6 +5,7 @@
   let mainDiv = document.querySelector('[data-id="game-con"]')
   let chatWindow = document.querySelector('[data-id="chat-window"]')
   let chatList = chatWindow.querySelector('ul')
+  let topNav = document.querySelector('.top-nav')
   let current_player = {}
   let gamesReference
   let playersReference
@@ -115,6 +116,7 @@
     mainDiv.innerHTML = `
     <h1>Hey ${current_player.name}</h1>
     <h2>What do you want to Play?</h2>
+    <h3>(Choose a Game Type Above)</h3>
     `
     
 
@@ -124,7 +126,14 @@
     // chatsReference.data[0].attributes.message
     // chatsReference.data[0].attributes.player.name
     chatsReference.data.forEach(chat => {
-      chatList.innerHTML += `<li>${chat.attributes.player.name.bold()} [${new Date(chat.attributes.created_at).toLocaleString('en-US').bold()}]: ${chat.attributes.message}</li>`
+      let chatClass
+      if (chat.attributes.player.name === current_player.name){
+        chatClass = "my-chat"
+        chatList.innerHTML += `<li class=${chatClass}>${chat.attributes.message} [${new Date(chat.attributes.created_at).toLocaleString('en-US').replace(/:\d{2}\s/,' ').bold()}]</li>`
+      } else {
+        chatClass = "their-chat"
+        chatList.innerHTML += `<li class=${chatClass}>${chat.attributes.player.name.bold()} [${new Date(chat.attributes.created_at).toLocaleString('en-US').replace(/:\d{2}\s/,' ').bold()}]: ${chat.attributes.message}</li>`
+      }
     })
   }
 
@@ -165,6 +174,7 @@
     topDiv.addEventListener('click', event => {
       if (event.target.textContent === "Ping Pong" || event.target.textContent === "Shuffleboard" || event.target.textContent === "Foosball") {
         fetchGames()
+        topNav.innerHTML = `<h1>Play on ${current_player.name}!</h1>`
         let game_type = event.target.textContent
         let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
         let first
@@ -206,7 +216,7 @@
     }
     return `
     <li class=${liClass}>
-      <h3> ${new Date(game.attributes.updated_at).toLocaleString('en-US')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
+      <h3> ${new Date(game.attributes.updated_at).toLocaleString('en-US').replace(/:\d{2}\s/,' ')} - ${game.attributes.num_players / 2} v ${game.attributes.num_players / 2} Game </h3>
       <ul> ${game.attributes.players.map(player => renderReservedPlayer(player)).join('')} </ul>
     </li>
     `
@@ -394,7 +404,7 @@
       .then(res => res.json())
       .then(data => {
   
-        chatList.innerHTML += `<li>${current_player.name.bold()} [${new Date().toLocaleString('en-US').bold()}]: ${data.message}</li>`
+        chatList.innerHTML += `<li class="my-chat">${data.message} [${new Date().toLocaleString('en-US').replace(/:\d{2}\s/,' ').bold()}]</li>`
         
       })
       event.target.message.value = ""

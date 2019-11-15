@@ -16,6 +16,7 @@ li {
   /* border-bottom: 1px solid rgba(185, 184, 184, 0.548); */
   /* z-index: 1;*/ /*Stay on top */
   background-color: #efe8e8a6;
+
   }
 
 .pre-sign-in {
@@ -117,9 +118,15 @@ main button {
   background-color: #efe8e8a6;
 }
 
-.chat ul {
+.chat ul .their-chat{
   text-align: left;
   margin-right: 5%;
+}
+
+.chat ul .my-chat{
+  text-align: right;
+  margin-right: 5%;
+  color:#bb6b6b;
 }
 
 .chat textarea {
