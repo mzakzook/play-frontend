@@ -11,6 +11,8 @@
   let playersReference
   let chatsReference
   let pgsReference
+  let chosenGameType
+  let slug
 
   const pongButton = document.createElement('button')
   pongButton.className = "game-button" 
@@ -98,7 +100,7 @@
       const leaderUl = document.createElement('ul')
       leaderboard.appendChild(leaderUl)
       const leaderNamesAndGamesPlayed = data.map(playerObj => `${playerObj[0]} Game(s) - ${playersReference.data.find(player => parseInt(player.id) === playerObj[1]).attributes.name}`)
-      for (let i = 0; i < leaderNamesAndGamesPlayed.length ; i++) {
+      for (let i = 0; i < leaderNamesAndGamesPlayed.length && i < 10 ; i++) {
         leaderUl.innerHTML += `<li>${i + 1}.  ${leaderNamesAndGamesPlayed[i]}`
       }
     })
@@ -173,39 +175,64 @@
   function listenForGameSelection() {
     topDiv.addEventListener('click', event => {
       if (event.target.textContent === "Ping Pong" || event.target.textContent === "Shuffleboard" || event.target.textContent === "Foosball") {
-        fetchGames()
-        topNav.innerHTML = `<h1>Play on ${current_player.name}!</h1>`
-        let game_type = event.target.textContent
-        let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
-        let first
-        let second
-        if (games[0].attributes.num_players === 2) {
-          first = games[0] 
-          second = games[1]
-        } else {
-          first = games[1]
-          second = games[0]
-        }
-        const reservedGame = document.createElement('div')
-        reservedGame.className = "reserved-games"
-        reservedGame.innerHTML = `<h2>Recent ${event.target.textContent} Games</h2>`
-        const matchedGames = gamesReference.data.filter(game => game.attributes.table.table_type === games[0].attributes.table.table_type && game.attributes.full === true) 
-        reservedGame.innerHTML += `<ul>${matchedGames.reverse().map(game => renderFullGame(game)).join("")}</ul>`
-        const gameOne = document.createElement('div')
-        gameOne.className = "game-one"
-        const gameTwo = document.createElement('div')
-        gameTwo.className = "game-two"
-        gameOne.innerHTML = renderGame(first)
-        gameTwo.innerHTML = renderGame(second)
-        mainDiv.innerHTML = `<h2>${games[0].attributes.table.table_type}</h2>`
-        const leaderboard = document.createElement('div')
-        leaderboard.className = "leaderboard"
-        const slug = event.target.textContent.split(' ').join('_').toLowerCase()
-        mainDiv.append(gameOne, gameTwo, reservedGame, leaderboard)
-        fetchLeaders(slug)
+        fetch(`${BACKEND_URL}/games`)
+        .then(response => 
+          response.json())
+        .then(data => {
+          gamesReference = data
+          return data
+        })
+        .then(data => {
+          chosenGameType = event.target.textContent
+          let game_type = event.target.textContent
+          let games = gamesReference.data.filter(game => game.attributes.table.table_type === game_type && game.attributes.full === false)
+          let first
+          let second
+          if (games[0].attributes.num_players === 2) {
+            first = games[0] 
+            second = games[1]
+          } else {
+            first = games[1]
+            second = games[0]
+          }
+          const reservedGame = document.createElement('div')
+          reservedGame.className = "reserved-games"
+          const gameCont = document.createElement('div')
+          gameCont.className = "game-cont"
+          const gameOne = document.createElement('div')
+          gameOne.className = "game-one"
+          const gameTwo = document.createElement('div')
+          gameCont.append(gameOne, gameTwo)
+          gameTwo.className = "game-two"
+          gameOne.innerHTML = renderGame(first)
+          gameTwo.innerHTML = renderGame(second)
+          mainDiv.innerHTML = `<h2>${games[0].attributes.table.table_type}</h2>`
+          const leaderboard = document.createElement('div')
+          leaderboard.className = "leaderboard"
+          const bottomStuff = document.createElement('div')
+          bottomStuff.className = "bottom-stuff"
+          bottomStuff.append(reservedGame, leaderboard)
+          slug = event.target.textContent.split(' ').join('_').toLowerCase()
+          mainDiv.append(gameCont, bottomStuff)
+          fetchLeaders(slug)
+          renderAllFullGames()
+          setInterval(function(){
+            fetchLeaders(slug)
+            renderAllFullGames()
+          }, 15000)
+        })
       }
     })
   }
+
+  function renderAllFullGames() {
+    fetchGames()
+    const reservedGame = document.querySelector('.reserved-games')
+    reservedGame.innerHTML = `<h2>Recent ${chosenGameType} Games</h2>`
+    const matchedGames = gamesReference.data.filter(game => game.attributes.table.table_type === chosenGameType && game.attributes.full) 
+    reservedGame.innerHTML += `<ul>${matchedGames.reverse().slice(0,3).map(game => renderFullGame(game)).join("")}</ul>`
+  }
+  
 
   function renderFullGame(game) {
     let liClass

@@ -1,5 +1,20 @@
 * {
   font-family: 'Work Sans', sans-serif;
+  box-sizing: border-box;
+  font-size: 1.5vw;
+}
+
+h1 {
+  font-size: 2.5vw;
+}
+
+h2 {
+  font-size: 1.75vw;
+}
+
+body {
+  width: 100%;
+  margin: 0;
 }
 
 li {
@@ -16,11 +31,20 @@ li {
   /* border-bottom: 1px solid rgba(185, 184, 184, 0.548); */
   /* z-index: 1;*/ /*Stay on top */
   background-color: #efe8e8a6;
-
+  padding-left: 2%;
   }
 
 .pre-sign-in {
   width: 100%;
+}
+
+img {
+  height: 80%;
+  padding-top: 1.1vw;
+  /* margin: 0 auto; */
+  text-align: center;
+  display: block;
+
 }
 
 
@@ -56,41 +80,28 @@ main form {
 }
 
 main form input {
-  border-radius: 3px;
+  border-radius: .25vw;
   padding: 1%;
   margin: 0 auto;
-  margin-top: 3%;;
-  font-size: 1rem;
-  border: solid .5px rgba(192, 192, 192, 0.575);
+  margin-top: 2%;;
+  font-size: 1vw;
+  border: solid .1vw rgba(8, 8, 8, 0.575);
   /* width: 25%; adjust as needed (as long as it doesn't break the signup.signup) */
   display: block;
   box-sizing: border-box;
 }
 
-.top button {
-  border-radius: 70px;
-  box-shadow: none;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: bold;
-  line-height: 20px;
-  padding: 8px 18px;
-  text-align: center;
-  white-space: nowrap;
-  display: block;
-  width: 33%;
-  margin: 0 auto;
-}
 
-main button {
+
+button {
   margin: 0 auto;
-  border-radius: 70px;
+  border-radius: 4.5vw;
   box-shadow: none;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 1.1vw;
   font-weight: bold;
-  line-height: 20px;
-  padding: 8px 18px;
+  line-height: 1.2vw;
+  padding: 0.5vw 1vw;
   text-align: center;
   white-space: nowrap;
   display: block;
@@ -99,8 +110,13 @@ main button {
   visibility: hidden;
 }
 
-.reserved-games {
-  margin-top: 5%;
+
+.chat-ul {
+  height: 23vw;
+  overflow-x: hidden; 
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .all-con {
@@ -116,24 +132,33 @@ main button {
   /* margin-left: 67%;
   width: 33%; */
   background-color: #efe8e8a6;
+  height: 40vw;
 }
 
-.chat ul .their-chat{
+.chat ul * {
+  font-size: 1vw;
+}
+
+.chat ul .their-chat {
   text-align: left;
   margin-right: 5%;
+  /* font-size: 1vw; */
 }
 
-.chat ul .my-chat{
+.chat ul .my-chat {
   text-align: right;
   margin-right: 5%;
   color:#bb6b6b;
+  /* font-size: 1vw; */
 }
 
 .chat textarea {
   width: 100%;
-  border-radius: 3px;
-  font-size: 1rem;
-  border: solid .5px rgba(192, 192, 192, 0.575);
+  border-radius: .2vw;
+  font-size: 1vw;
+  border: solid .03vw rgba(192, 192, 192, 0.575);
+  resize: none;
+  height: 5vw;
 }
 
 .game-one ul {
@@ -144,7 +169,7 @@ main button {
   text-align: center;
   display: grid;
   grid-template-columns: 50% 50%;
-  width: 30%
+ 
   
 }
 
@@ -156,7 +181,7 @@ main button {
   text-align: center;
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
-  width: 50%
+  
   
 }
 
@@ -166,7 +191,7 @@ main button {
   text-align: center;
   display: grid;
   grid-template-columns: 50% 50%;
-  width: 30%
+  width: 90%
 }
 
 .two-v-two ul {
@@ -175,10 +200,37 @@ main button {
   text-align: center;
   display: grid;
   grid-template-columns: 25% 25% 25% 25%;
-  width: 50%
+  width: 90%
 }
 
 .leaderboard ul {
   text-align: left;
   padding-left: 30%;
+}
+
+.game-cont {
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.game-one {
+
+}
+
+.game-two {
+
+}
+
+.bottom-stuff {
+  
+  display: grid;
+  grid-template-columns: 50% 50%;
+}
+
+.reserved-games {
+  padding-top: 10%;
+}
+
+.leaderboard {
+  padding-top: 10%;
 }
